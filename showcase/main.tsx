@@ -18,12 +18,14 @@ const Demo = () => {
   const buttonProps = native ? { onPress: () => setMessage('操作已提交'), accessibilityLabel: '主要操作' } : { onClick: () => setMessage('操作已提交'), 'aria-label': '主要操作' };
   const disabledProps = native ? { disabled: true, accessibilityLabel: '禁用操作' } : { disabled: true, 'aria-label': '禁用操作' };
   const switchProps = native ? { value: enabled, onValueChange: setEnabled, accessibilityLabel: '启用通知' } : { checked: enabled, onChange: (event: React.ChangeEvent<HTMLInputElement> | boolean) => setEnabled(typeof event === 'boolean' ? event : event.target.checked), 'aria-label': '启用通知' };
+  const inputProps = native ? { accessibilityLabel: '名称' } : { 'aria-label': '名称' };
+  const selectProps = native ? { accessibilityLabel: '类型' } : { 'aria-label': '类型' };
 
   return <main>
     <header><h1>智序前端控件</h1><p>{target.toUpperCase()} 真实控件渲染 · <a href="?target=web">Web</a> · <a href="?target=h5">H5</a> · <a href="?target=native">Native Web</a></p></header>
     <section><h2>Button</h2><Controls.ZButton {...buttonProps}>主要操作</Controls.ZButton><Controls.ZButton {...disabledProps}>禁用</Controls.ZButton><Controls.ZButton {...disabledProps} loading>加载中</Controls.ZButton></section>
-    <section><h2>Input</h2><Controls.ZInput aria-label="名称" accessibilityLabel="名称" placeholder="请输入名称" /></section>
-    <section><h2>Select</h2><Controls.ZSelect accessibilityLabel="类型" aria-label="类型" options={[{ label: 'Web', value: 'web' }, { label: 'H5', value: 'h5' }, { label: 'Native', value: 'native' }]} /></section>
+    <section><h2>Input</h2><Controls.ZInput {...inputProps} placeholder="请输入名称" /></section>
+    <section><h2>Select</h2><Controls.ZSelect {...selectProps} options={[{ label: 'Web', value: 'web' }, { label: 'H5', value: 'h5' }, { label: 'Native', value: 'native' }]} /></section>
     <section><h2>Switch</h2><Controls.ZSwitch {...switchProps} /></section>
     <section><h2>Toast</h2><Controls.ZToast message={message} type="success" /></section>
   </main>;
