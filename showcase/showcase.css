@@ -1,0 +1,5 @@
+:root { font: 16px system-ui, sans-serif; color: var(--zxgc-color-text); background: var(--zxgc-color-background); }
+body { max-width: 960px; margin: 0 auto; padding: 24px; }
+section { padding: 16px 0; border-bottom: 1px solid var(--zxgc-color-muted-text); }
+button, input, select { min-height: 44px; margin: 4px; padding: 8px 12px; border: 1px solid var(--zxgc-color-muted-text); border-radius: 8px; background: var(--zxgc-color-background); color: inherit; }
+button { cursor: pointer; }

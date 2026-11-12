@@ -1,23 +1,12 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>智序控件展示台</title>
-  <link rel="stylesheet" href="../tokens/dist/tokens.css">
-  <style>
-    :root { font: 16px system-ui, sans-serif; color: var(--zxgc-color-text); background: var(--zxgc-color-background); }
-    body { max-width: 960px; margin: 0 auto; padding: 24px; } section { padding: 16px 0; border-bottom: 1px solid var(--zxgc-color-muted-text); }
-    button, input, select { min-height: 44px; margin: 4px; padding: 8px 12px; border: 1px solid var(--zxgc-color-muted-text); border-radius: 8px; background: var(--zxgc-color-background); color: inherit; } button { cursor: pointer; } [role="status"] { padding: 12px; border-left: 4px solid var(--zxgc-color-primary); }
-  </style>
-</head>
-<body>
-  <header><h1>智序前端控件</h1><p>阶段 2 展示台，使用 tokens/dist 真实产物。</p></header>
-  <main>
-    <section><h2>Button</h2><button type="button">主要操作</button><button type="button" disabled>禁用</button><button type="button" aria-busy="true">加载中</button></section>
-    <section><h2>Input</h2><label for="sample-input">名称</label><input id="sample-input" aria-label="名称" placeholder="请输入"></section>
-    <section><h2>Select</h2><label for="sample-select">类型</label><select id="sample-select" aria-label="类型"><option>Web</option><option>H5</option><option>Native</option></select></section>
-    <section><h2>Switch</h2><button type="button" role="switch" aria-checked="false" aria-label="启用通知">关闭</button></section>
-    <section><h2>Toast</h2><div role="status">保存成功</div></section>
-  </main>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>智序控件展示台</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
 </html>

@@ -16,10 +16,13 @@ test('three UI targets expose the five first controls', async () => {
   }
 });
 
-test('showcase covers five controls and non-blocking toast', async () => {
+test('showcase mounts the real controls and keeps five control sections', async () => {
   const html = await read('showcase/ui-kit.html');
-  for (const name of ['Button', 'Input', 'Select', 'Switch', 'Toast']) assert.match(html, new RegExp(`<h2>${name}</h2>`));
-  assert.match(html, /role="status"/);
-  assert.match(html, /tokens\/dist\/tokens\.css/);
+  assert.match(html, /main\.tsx/);
+  const source = await read('showcase/main.tsx');
+  for (const name of ['Button', 'Input', 'Select', 'Switch', 'Toast']) assert.match(source, new RegExp(`<h2>${name}</h2>`));
+  assert.match(source, /ui-web\/src\/index/);
+  assert.match(source, /ui-h5\/src\/index/);
+  assert.match(source, /ui-native\/src\/index/);
 });
 
