@@ -1,6 +1,7 @@
 import { act, create } from 'react-test-renderer';
 import { describe, expect, it, vi } from 'vitest';
 import { ZButton, ZInput, ZSelect, ZSwitch, ZToast } from '../ui-native/src/index';
+import { nativeTheme } from '../tokens/dist/native-theme';
 
 describe('ui-native controls', () => {
   it('renders all controls with accessibility labels', () => {
@@ -13,7 +14,7 @@ describe('ui-native controls', () => {
     const onPress = vi.fn();
     let tree: ReturnType<typeof create>;
     act(() => { tree = create(<><ZButton disabled accessibilityLabel="禁用" onPress={onPress}>禁用</ZButton><ZButton loading accessibilityLabel="加载" onPress={onPress}>加载</ZButton></>); });
-    for (const name of ['禁用', '加载']) expect(tree!.root.findAllByProps({ accessibilityLabel: name }).some((node) => node.props.disabled === true)).toBe(true);
+    for (const name of ['禁用', '加载']) expect(tree!.root.findAllByProps({ accessibilityLabel: name }).some((node) => node.props.disabled === true && node.props.style?.backgroundColor === nativeTheme.light.mutedText && node.props.style?.marginBottom === 8)).toBe(true);
     expect(onPress).not.toHaveBeenCalled();
   });
 });

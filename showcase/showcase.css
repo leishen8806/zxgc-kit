@@ -5,9 +5,9 @@ section p { color: var(--zxgc-color-muted-text); font-size: var(--zxgc-font-size
 button, input, select, .ant-btn, .ant-input, .ant-select-selector { min-height: 44px; margin: 4px; padding: var(--zxgc-spacing-sm) var(--zxgc-spacing-md); border: 1px solid var(--zxgc-color-muted-text); border-radius: var(--zxgc-radius-md); background: var(--zxgc-color-surface); color: var(--zxgc-color-text); font-size: var(--zxgc-font-size-md); }
 button { cursor: pointer; }
 button.zxgc-button, .ant-btn-primary { border-color: var(--zxgc-color-primary); background: var(--zxgc-color-primary); color: var(--zxgc-color-background); }
-button.zxgc-button:disabled, button:disabled, .ant-btn-disabled { opacity: .5; cursor: not-allowed; }
+button.zxgc-button:disabled, button:disabled, .ant-btn-disabled { border-color: var(--zxgc-color-muted-text); background: var(--zxgc-color-muted-text); color: var(--zxgc-color-background); cursor: not-allowed; opacity: 1; }
 button[aria-busy="true"]::before { content: '… '; }
-button.zxgc-switch, .ant-switch { min-width: 56px; padding: 6px 12px; }
+button.zxgc-switch, .ant-switch { min-width: 56px; min-height: 32px; height: 32px; margin: 4px; padding: 0; }
 button[role="switch"][aria-checked="true"], .ant-switch-checked { border-color: var(--zxgc-color-primary); background: var(--zxgc-color-primary); color: var(--zxgc-color-background); }
 [role="alert"], [role="status"] { margin: 4px; padding: 12px; border: 1px solid var(--zxgc-color-success); border-radius: var(--zxgc-radius-md); background: var(--zxgc-color-surface); }
 code { color: var(--zxgc-color-primary); }
