@@ -8,12 +8,12 @@ const TOKENS = { duration: '280ms', fast: '200ms', ease: 'cubic-bezier(.2,.8,.2,
 const params = new URLSearchParams(location.search);
 document.documentElement.dataset.theme = params.get('theme') === 'dark' ? 'dark' : 'light';
 const prompts = [
-  '给按钮加入按压 96% 缩放、松手过冲后回到 100% 的弹簧反馈。', '让开关圆点移动时横向拉长，到达终点后恢复圆形并轻微回弹。',
-  '让点击波纹从指针按下坐标向外扩散，而不是固定从按钮中心开始。', '只给点赞和收藏按钮加入图标回弹与一圈粒子成功动画。',
-  '用约 200ms 的描边动画把复选框对勾从左下画到右上。', '让滑块的填充、滑钮和数值使用相同的时长与缓动同步更新。',
-  '让数字从旧值滚动到新值，使用减速曲线并在目标值附近停稳。', '让骨架占位与真实内容保持同样尺寸，替换时布局位移为零。',
-  '让卡片绕 Y 轴翻面，正反面都隐藏背面，过程中不露反向内容。', '让汉堡三横线在打开时变成叉号，关闭时反向还原。',
-  '让卡片堆叠露出下层边缘，划走顶部后下一张平滑移到顶部。', '让底部抽屉支持关闭、半屏、全屏三个停靠点与手指拖动。',
+  '按压回弹：按钮按下时缩小到96%；松手时用弹簧动画先放大到略超过原尺寸，再回到100%', '弹性开关：开关切换时，圆点在移动过程中横向拉长为胶囊形，到达终点后恢复为圆形，带轻微回弹',
+  '波纹跟手：点击按钮时，从手指按下的位置生成圆形波纹向外扩散，而不是从按钮中心开始', '点赞炸一下：只给点赞和收藏按钮加成功动画：图标放大回弹，同时向四周散开一圈小粒子；其他按钮不加',
+  '勾选画出来：复选框选中时，对勾用描边动画从左下画到右上，时长约200毫秒', '液态滑块：拖动滑块时，轨道填充色、滑钮位置和上方数值同步更新，三者使用同一个动画时长和曲线',
+  '数字滚动：数字从旧值滚动到新值，使用减速曲线，接近目标值时逐渐变慢后停下', '骨架屏：骨架屏中每个占位条的宽高与真实内容一致；数据到达后在原位置替换，页面布局不发生跳动',
+  '卡片翻面：卡片沿Y轴翻转，正反两面都设置隐藏背面，翻转过程中看不到另一面的反向内容', '汉堡变叉：菜单按钮的三条横线在打开时变形为叉号：上下两条旋转交叉，中间一条淡出；关闭时反向变回',
+  '卡片堆叠：卡片以堆叠方式显示，下面的卡片向下错开并略微缩小，露出边缘；划走顶部卡片后，下一张移到顶部', '底部抽屉：底部抽屉设置半屏和全屏两个停靠点：上拉时先停在半屏，继续上拉到全屏，下拉超过一半时关闭',
 ];
 
 const DemoCard = ({ index, title, summary, children }: { index: number; title: string; summary: string; children: React.ReactNode }) => {
@@ -32,7 +32,7 @@ const RippleDemo = () => { const [ripple, setRipple] = React.useState<{ x: numbe
 const BurstButton = ({ label, burst }: { label: string; burst: boolean }) => { const [key, setKey] = React.useState(0); return <button className={`burst-demo ${burst && key ? 'has-burst' : ''}`} type="button" onClick={() => setKey(v => v + 1)}><span className="burst-icon">{burst ? '♥' : '☆'}</span>{label}{burst && key > 0 && <span className="particles" key={key}>{Array.from({ length: 10 }, (_, i) => <i key={i} style={{ '--i': i } as React.CSSProperties} />)}</span>}</button>; };
 const CheckDemo = () => { const [checked, setChecked] = React.useState(false); return <label className="check-demo"><input type="checkbox" checked={checked} onChange={e => setChecked(e.target.checked)} /><span className={`check-box ${checked ? 'is-checked' : ''}`}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" /></svg></span><span>我已确认这条微交互</span></label>; };
 const SliderDemo = () => { const [value, setValue] = React.useState(42); return <div className="slider-demo"><div className="slider-label"><span>液态进度</span><strong>{value}%</strong></div><input aria-label="液态进度" type="range" min="0" max="100" value={value} onChange={e => setValue(Number(e.target.value))} style={{ '--value': `${value}%` } as React.CSSProperties} /></div>; };
-const NumberDemo = () => { const [value, setValue] = React.useState(128); return <div className="number-demo"><span key={value} className="rolling-number">{value}</span><button type="button" onClick={() => setValue(v => v + 37)}>增加 37</button></div>; };
+const NumberDemo = () => { const [value, setValue] = React.useState(128); const rolling = React.useRef(false); const roll = () => { if (rolling.current) return; rolling.current = true; const start = value; const end = start + 37; const started = performance.now(); const tick = (now: number) => { const progress = Math.min(1, (now - started) / 900); const eased = 1 - Math.pow(1 - progress, 3); setValue(Math.round(start + (end - start) * eased)); if (progress < 1) requestAnimationFrame(tick); else rolling.current = false; }; requestAnimationFrame(tick); }; return <div className="number-demo"><span className="rolling-number">{value}</span><button type="button" onClick={roll}>增加 37</button></div>; };
 const SkeletonDemo = () => { const [loaded, setLoaded] = React.useState(false); return <div className="skeleton-demo"><div className={`skeleton-content ${loaded ? 'is-loaded' : ''}`}><div className="avatar" /><div className="content-lines"><b>{loaded ? '一份稳定的内容卡片' : ''}</b><span>{loaded ? '数据到达后，原位置替换，不发生布局跳动。' : ''}</span><span>{loaded ? '宽高与骨架保持一致。' : ''}</span></div></div><button type="button" onClick={() => setLoaded(v => !v)}>{loaded ? '重置骨架' : '加载内容'}</button></div>; };
 const FlipDemo = () => { const [flipped, setFlipped] = React.useState(false); return <button className={`flip-scene ${flipped ? 'is-flipped' : ''}`} type="button" aria-pressed={flipped} onClick={() => setFlipped(v => !v)}><span className="flip-card"><span className="flip-face flip-front">正面<br /><small>点击翻转</small></span><span className="flip-face flip-back">背面<br /><small>再次翻回</small></span></span></button>; };
 const MenuDemo = () => { const [open, setOpen] = React.useState(false); return <button className={`menu-demo ${open ? 'is-open' : ''}`} type="button" aria-expanded={open} onClick={() => setOpen(v => !v)}><span /><span /><span /><b>{open ? '关闭菜单' : '打开菜单'}</b></button>; };
@@ -46,12 +46,12 @@ const demos = [
 ] as const;
 
 const materialPrompts = [
-  '做一张 20px 背景模糊、15% 白色透明度和半透明白边的毛玻璃卡片。', '做一张厚玻璃卡片，用边缘高光和局部缩放阴影近似折射，并注明近似限制。',
-  '只给成就徽章和限量会员卡加随指针变化的彩虹全息反光与细闪颗粒。', '做深灰拉丝金属卡片，横向细纹、斜向高光和压印文字保持克制。',
-  '只给推荐价格卡使用 1px 品牌色到透明的渐变描边，其他卡片保留灰边。', '给卡片加一圈 8 秒匀速旋转、无闪烁的渐变流光边框。',
-  '给暗灰卡片加一段约占周长十分之一的亮光沿边框循环跑马。', '让一排卡片的聚光灯圆心跟随指针，边框靠近指针的位置同步变亮。',
-  '在深色页面给卡片背后加品牌色大范围模糊光晕，让卡片像浮在光上。', '用中间最亮、两端渐隐的同色柔光分割线替代普通灰线。',
-  '让卡片随指针做不超过 10 度的 3D 倾斜，表面高光同步，离开后平滑回正。',
+  '[材质] 毛玻璃：卡片背景模糊20像素，白色15%透明，加一圈白色半透明细边；卡片背后放几团柔和的彩色光斑，让模糊有东西可透', '[材质] 液态玻璃：卡片做成厚玻璃质感，边缘像透镜一样把背后的内容轻微弯折、放大，中间保持清晰，边上加一道细高光',
+  '[材质] 全息卡片：卡片表面加一层彩虹色反光，随鼠标位置改变角度和颜色，叠一点细闪颗粒；只用在成就徽章和限量会员卡上', '[材质] 拉丝金属：卡片底色做成深灰金属，表面加横向细密的拉丝纹理和一道斜向高光，文字做成压印效果',
+  '[光效] 渐变描边：推荐的那张价格卡加1-2像素的渐变边框，从品牌色过渡到透明，其他卡片保持普通灰边', '[光效] 流光边框：卡片边框用一圈渐变色，沿边框匀速旋转，8秒转一圈，不要闪烁',
+  '[光效] 跑马灯描边：边框保持暗灰色，只有一小段亮光沿边框循环绕行，亮的那段约占边框长度的十分之一', '[光效] 聚光灯卡片：鼠标在卡片上移动时，鼠标位置亮起一团柔和的圆形光，边框靠近鼠标的部分也跟着变亮；一排卡片都加这个效果',
+  '[光效] 光晕：深色页面上，卡片背后放一团品牌色的大范围模糊光晕，从卡片边缘透出来，像卡片浮在光上', '[光效] 发光分割线：分割线中间亮、两端渐隐到透明，中间带一点同色柔光，代替普通灰线',
+  '[光效] 3D倾斜：卡片随鼠标位置做3D倾斜，最大不超过10度，表面高光跟着倾斜方向移动，鼠标离开后平滑回正',
 ];
 const MaterialCard = ({ index, title, summary, children, className = '' }: { index: number; title: string; summary: string; children: React.ReactNode; className?: string }) => { const [copied, setCopied] = React.useState(false); const copy = async () => { try { await navigator.clipboard.writeText(materialPrompts[index - 1]); } catch { /* clipboard is optional */ } setCopied(true); window.setTimeout(() => setCopied(false), 1200); }; return <article id={`demo-${index}`} className={`material-card ${className}`}><div className="demo-heading"><span className="demo-number">{String(index).padStart(2, '0')}</span><div><h2>{title}</h2><p>{summary}</p></div></div><div className="material-stage">{children}</div><div className="prompt-row"><code>{materialPrompts[index - 1]}</code><button className="copy-button" type="button" onClick={copy}>{copied ? '已复制' : '复制提示词'}</button></div></article>; };
 const Spotlight = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => { const ref = React.useRef<HTMLDivElement>(null); const move = (e: React.PointerEvent) => { const node = ref.current; const r = node?.getBoundingClientRect(); if (r && node) { node.style.setProperty('--spot-x', `${e.clientX - r.left}px`); node.style.setProperty('--spot-y', `${e.clientY - r.top}px`); } }; return <div ref={ref} className={`spotlight-card ${className}`} onPointerMove={move} onPointerDown={move}>{children}</div>; };
