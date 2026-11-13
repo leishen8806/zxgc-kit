@@ -7,6 +7,15 @@
   --zxgc-color-success: #067647;
   --zxgc-color-warning: #b54708;
   --zxgc-color-danger: #b42318;
+  --zxgc-spacing-sm: 8px;
+  --zxgc-spacing-md: 16px;
+  --zxgc-spacing-lg: 24px;
+  --zxgc-radius-sm: 4px;
+  --zxgc-radius-md: 8px;
+  --zxgc-radius-lg: 12px;
+  --zxgc-font-size-sm: 14px;
+  --zxgc-font-size-md: 16px;
+  --zxgc-font-size-lg: 20px;
 }
 
 :root[data-theme="dark"] {
@@ -18,4 +27,13 @@
   --zxgc-color-success: #75e0a7;
   --zxgc-color-warning: #fec84b;
   --zxgc-color-danger: #fda29b;
+  --zxgc-spacing-sm: 8px;
+  --zxgc-spacing-md: 16px;
+  --zxgc-spacing-lg: 24px;
+  --zxgc-radius-sm: 4px;
+  --zxgc-radius-md: 8px;
+  --zxgc-radius-lg: 12px;
+  --zxgc-font-size-sm: 14px;
+  --zxgc-font-size-md: 16px;
+  --zxgc-font-size-lg: 20px;
 }
