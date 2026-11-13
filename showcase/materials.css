@@ -16,7 +16,7 @@
 .blob-scene i { position:absolute; width:140px; height:140px; border-radius:50%; filter:blur(15px); }
 .blob-scene i:first-child { top:-50px; left:20px; background:#f0a78d; }
 .blob-scene i:nth-child(2) { right:-25px; bottom:-50px; background:#78c4c0; }
-.frosted-surface { position:absolute; inset:28px 34px; display:grid; place-content:center; border:1px solid #fffc; border-radius:14px; background:#fff2; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); color:#17343a; text-align:center; }
+.frosted-surface { position:absolute; inset:28px 34px; display:grid; place-content:center; border:1px solid #fffc; border-radius:14px; background:rgba(255,255,255,.15); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); color:#17343a; text-align:center; }
 .frosted-surface b,.liquid-surface b,.metal-surface b { display:block; font-size:22px; letter-spacing:.06em; }
 .frosted-surface span,.liquid-surface span,.metal-surface span { font-size:10px; letter-spacing:.1em; }
 .liquid-surface { position:relative; display:grid; width:280px; height:135px; place-content:center; overflow:hidden; border:1px solid #fff9; border-radius:22px; background:radial-gradient(circle at 20% 25%,#fff9,transparent 25%),linear-gradient(135deg,#c9f1eb99,#ffffff30 45%,#ffb3d266); box-shadow:inset 0 0 20px #fff8,inset 14px 0 28px #fff3,10px 14px 20px #0002; color:#17343a; text-align:center; }
