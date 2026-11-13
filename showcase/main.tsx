@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import '../tokens/dist/tokens.css';
 import './showcase.css';
+import './materials.css';
 
 const TOKENS = { duration: '280ms', fast: '200ms', ease: 'cubic-bezier(.2,.8,.2,1)', spring: 'cubic-bezier(.34,1.56,.64,1)' };
 const params = new URLSearchParams(location.search);
@@ -44,10 +45,41 @@ const demos = [
   [7, '数字滚动', '数字以减速曲线滚动到新值。', <NumberDemo />], [8, '骨架屏', '真实内容替换骨架，尺寸保持不变。', <SkeletonDemo />], [9, '卡片翻面', '沿 Y 轴翻转，正反面隐藏背面。', <FlipDemo />], [10, '汉堡变叉', '三条横线变形为叉号，再反向还原。', <MenuDemo />], [11, '卡片堆叠', '划走顶部卡片，下一张移到顶部。', <StackDemo />], [12, '底部抽屉', '关闭、半屏、全屏与手指拖动。', <DrawerDemo />],
 ] as const;
 
+const materialPrompts = [
+  '做一张 20px 背景模糊、15% 白色透明度和半透明白边的毛玻璃卡片。', '做一张厚玻璃卡片，用边缘高光和局部缩放阴影近似折射，并注明近似限制。',
+  '只给成就徽章和限量会员卡加随指针变化的彩虹全息反光与细闪颗粒。', '做深灰拉丝金属卡片，横向细纹、斜向高光和压印文字保持克制。',
+  '只给推荐价格卡使用 1px 品牌色到透明的渐变描边，其他卡片保留灰边。', '给卡片加一圈 8 秒匀速旋转、无闪烁的渐变流光边框。',
+  '给暗灰卡片加一段约占周长十分之一的亮光沿边框循环跑马。', '让一排卡片的聚光灯圆心跟随指针，边框靠近指针的位置同步变亮。',
+  '在深色页面给卡片背后加品牌色大范围模糊光晕，让卡片像浮在光上。', '用中间最亮、两端渐隐的同色柔光分割线替代普通灰线。',
+  '让卡片随指针做不超过 10 度的 3D 倾斜，表面高光同步，离开后平滑回正。',
+];
+const MaterialCard = ({ index, title, summary, children, className = '' }: { index: number; title: string; summary: string; children: React.ReactNode; className?: string }) => { const [copied, setCopied] = React.useState(false); const copy = async () => { try { await navigator.clipboard.writeText(materialPrompts[index - 1]); } catch { /* clipboard is optional */ } setCopied(true); window.setTimeout(() => setCopied(false), 1200); }; return <article id={`demo-${index}`} className={`material-card ${className}`}><div className="demo-heading"><span className="demo-number">{String(index).padStart(2, '0')}</span><div><h2>{title}</h2><p>{summary}</p></div></div><div className="material-stage">{children}</div><div className="prompt-row"><code>{materialPrompts[index - 1]}</code><button className="copy-button" type="button" onClick={copy}>{copied ? '已复制' : '复制提示词'}</button></div></article>; };
+const Spotlight = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => { const ref = React.useRef<HTMLDivElement>(null); const move = (e: React.PointerEvent) => { const node = ref.current; const r = node?.getBoundingClientRect(); if (r && node) { node.style.setProperty('--spot-x', `${e.clientX - r.left}px`); node.style.setProperty('--spot-y', `${e.clientY - r.top}px`); } }; return <div ref={ref} className={`spotlight-card ${className}`} onPointerMove={move} onPointerDown={move}>{children}</div>; };
+const Tilt = ({ children }: { children: React.ReactNode }) => { const ref = React.useRef<HTMLDivElement>(null); const move = (e: React.PointerEvent) => { const node = ref.current; const r = node?.getBoundingClientRect(); if (!r || !node) return; const x = ((e.clientX - r.left) / r.width - .5) * 2; const y = ((e.clientY - r.top) / r.height - .5) * 2; node.style.setProperty('--tilt-x', `${Math.max(-10, Math.min(10, y * -10))}deg`); node.style.setProperty('--tilt-y', `${Math.max(-10, Math.min(10, x * 10))}deg`); node.style.setProperty('--spot-x', `${e.clientX - r.left}px`); node.style.setProperty('--spot-y', `${e.clientY - r.top}px`); }; const leave = () => { ref.current?.style.setProperty('--tilt-x', '0deg'); ref.current?.style.setProperty('--tilt-y', '0deg'); }; return <div ref={ref} className="tilt-card" onPointerMove={move} onPointerDown={move} onPointerLeave={leave}>{children}</div>; };
+const MaterialsPage = () => <main className="materials-page" style={{ '--motion-duration': TOKENS.duration, '--motion-fast': TOKENS.fast, '--motion-ease': TOKENS.ease, '--motion-spring': TOKENS.spring } as React.CSSProperties}>
+  <header className="materials-hero"><div><p className="eyebrow">SURFACE & LIGHT · V0.1</p><h1>材质定气质，<br /><em>光效抓眼球。</em></h1><p className="hero-copy">11 个卡片材质与光效样本。每一张都能直接感受、复制、带走。</p></div><nav className="page-nav" aria-label="展示页导航"><a href="./ui-kit.html">微交互 12 条</a><a className="is-current" href="./ui-kit.html?page=materials">材质与光效 11 条</a></nav></header>
+  <section className="material-group"><div className="group-label"><span>01 — 04</span><h2>材质定气质</h2><p>先让卡片拥有触感，再让内容获得层次。</p></div><div className="material-grid">
+    <MaterialCard index={1} title="毛玻璃" summary="模糊背景，让信息浮在柔和的环境上。"><div className="blob-scene"><i /><i /><div className="frosted-surface"><b>透明感</b><span>20px blur · 15% white</span></div></div></MaterialCard>
+    <MaterialCard index={2} title="液态玻璃" summary="厚玻璃边缘高光；CSS 近似，不是真实折射。"><div className="liquid-surface"><b>LIQUID</b><span>CSS approximation · edge lens</span></div></MaterialCard>
+    <MaterialCard index={3} title="全息卡片" summary="只给成就徽章和限量会员卡使用彩虹反光。"><div className="holo-row"><div className="holo-card" onPointerMove={e => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--hx', `${(e.clientX-r.left)/r.width*100}%`); e.currentTarget.style.setProperty('--hy', `${(e.clientY-r.top)/r.height*100}%`); }}><b>✦ 成就</b><small>ACHIEVEMENT</small></div><div className="holo-card" onPointerMove={e => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--hx', `${(e.clientX-r.left)/r.width*100}%`); e.currentTarget.style.setProperty('--hy', `${(e.clientY-r.top)/r.height*100}%`); }}><b>NO. 0088</b><small>LIMITED MEMBER</small></div></div></MaterialCard>
+    <MaterialCard index={4} title="拉丝金属" summary="深灰横纹、斜向高光与压印文字，冷静但有重量。"><div className="metal-surface"><b>STEEL / 04</b><span>BRUSHED MATERIAL</span></div></MaterialCard>
+  </div></section>
+  <section className="material-group"><div className="group-label"><span>05 — 11</span><h2>光效抓眼球</h2><p>用光线引导视线，不让装饰抢走内容。</p></div><div className="material-grid">
+    <MaterialCard index={5} title="渐变描边" summary="只有推荐价格卡拥有品牌色渐变边框。"><div className="price-row"><div className="price-card"><span>基础</span><b>$12</b></div><div className="price-card recommended"><span>推荐</span><b>$24</b></div><div className="price-card"><span>团队</span><b>$48</b></div></div></MaterialCard>
+    <MaterialCard index={6} title="流光边框" summary="渐变沿边框匀速旋转，8 秒一圈，不闪烁。"><div className="glow-border"><b>8 SECOND LOOP</b><span>steady light</span></div></MaterialCard>
+    <MaterialCard index={7} title="跑马灯描边" summary="暗灰底边框，只有十分之一长度的亮段绕行。"><div className="marquee-border"><b>10% BRIGHT SEGMENT</b></div></MaterialCard>
+    <MaterialCard index={8} title="聚光灯卡片" summary="一排卡片都响应指针或手指位置。"><div className="spotlight-row"><Spotlight>01 <small>跟随</small></Spotlight><Spotlight>02 <small>跟随</small></Spotlight><Spotlight>03 <small>跟随</small></Spotlight></div></MaterialCard>
+    <MaterialCard index={9} title="光晕" summary="深色展示区里，卡片像浮在品牌色光上。" className="dark-material"><div className="aura-card"><b>FLOATING</b><span>BRAND AURA</span></div></MaterialCard>
+    <MaterialCard index={10} title="发光分割线" summary="中间最亮，两端渐隐，柔光替代普通灰线。"><div className="divider-demo"><span /><b>SECTION</b><span /></div></MaterialCard>
+    <MaterialCard index={11} title="3D 倾斜" summary="最大 10°，离开后回正；触摸按住也能感受。"><Tilt><b>MOVE YOUR POINTER</b><span>MAX ±10° · SMOOTH RESET</span></Tilt></MaterialCard>
+  </div></section>
+  <footer>原生 CSS + JavaScript · <a href="./ui-kit.html">回到微交互展示页</a></footer>
+</main>;
+
 const App = () => <main style={{ '--motion-duration': TOKENS.duration, '--motion-fast': TOKENS.fast, '--motion-ease': TOKENS.ease, '--motion-spring': TOKENS.spring } as React.CSSProperties}>
-  <header className="hero"><div><p className="eyebrow">MICRO-INTERACTIONS · V0.1</p><h1>让每一次点击<br /><em>都有回应。</em></h1><p className="hero-copy">12 个可反复操作的微交互样本。用手指、鼠标或键盘试试看。</p></div><div className="hero-orbit" aria-hidden="true"><i /><i /><i /></div></header>
+  <header className="hero"><div><p className="eyebrow">MICRO-INTERACTIONS · V0.1</p><h1>让每一次点击<br /><em>都有回应。</em></h1><p className="hero-copy">12 个可反复操作的微交互样本。用手指、鼠标或键盘试试看。</p><nav className="page-nav" aria-label="展示页导航"><a className="is-current" href="./ui-kit.html">微交互 12 条</a><a href="./ui-kit.html?page=materials">材质与光效 11 条</a></nav></div><div className="hero-orbit" aria-hidden="true"><i /><i /><i /></div></header>
   <div className="demo-grid">{demos.map(([index, title, summary, child]) => <DemoCard key={index} index={index} title={title} summary={summary}>{child}</DemoCard>)}</div>
   <footer>原生 CSS + JavaScript · 支持浅色 / 深色、触摸、键盘与减少动态效果</footer>
 </main>;
 
-createRoot(document.getElementById('root')!).render(<App />);
+createRoot(document.getElementById('root')!).render(params.get('page') === 'materials' ? <MaterialsPage /> : <App />);
