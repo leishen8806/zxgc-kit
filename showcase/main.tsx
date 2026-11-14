@@ -7,6 +7,7 @@ import * as Native from '../ui-native/src/index';
 import './showcase.css';
 import './materials.css';
 
+const ActivityPage = React.lazy(() => import('./activity'));
 const GlassPage = React.lazy(() => import('./glass'));
 function Navigation() { React.useEffect(() => { document.querySelectorAll<HTMLElement>('.page-nav').forEach(nav => { if (!nav.querySelector('[href="./ui-kit.html?page=glass"]')) nav.insertAdjacentHTML('beforeend', '<a href="./ui-kit.html?page=glass">玻璃数据看板</a>'); }); }, []); return null; }
 
@@ -110,4 +111,4 @@ const MicroInteractionsPage = () => <main style={{ '--motion-duration': TOKENS.d
   <footer>原生 CSS + JavaScript · 支持浅色 / 深色、触摸、键盘与减少动态效果</footer>
 </main>;
 
-createRoot(document.getElementById('root')!).render(<><Navigation />{params.get('page') === 'glass' ? <React.Suspense fallback={null}><GlassPage /></React.Suspense> : params.get('page') === 'micro' ? <MicroInteractionsPage /> : params.get('page') === 'materials' ? <MaterialsPage /> : <ControlsPage />}</>);
+createRoot(document.getElementById('root')!).render(<><Navigation />{params.get('page') === 'activity' ? <React.Suspense fallback={null}><ActivityPage /></React.Suspense> : params.get('page') === 'glass' ? <React.Suspense fallback={null}><GlassPage /></React.Suspense> : params.get('page') === 'micro' ? <MicroInteractionsPage /> : params.get('page') === 'materials' ? <MaterialsPage /> : <ControlsPage />}</>);
